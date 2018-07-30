@@ -16,30 +16,23 @@ public abstract class ObjectPool {
     synchronized Object checkOut(){
         long now = System.currentTimeMillis();
         Object o;
-        if( unlocked.size() > 0 )
-        {
+        if( unlocked.size() > 0 ) {
             Enumeration e = unlocked.keys();
-            while( e.hasMoreElements() )
-            {
+            while( e.hasMoreElements() ) {
                 o = e.nextElement();
-                if( ( now - ( ( Long ) unlocked.get( o ) ).longValue() ) >
-                        expirationTime )
-                {
+                if( ( now - ( ( Long ) unlocked.get( o ) ).longValue() ) > expirationTime ) {
                     // if object has expired
                     unlocked.remove( o );
                     expire( o );
                     o = null;
                 }
-                else
-                {If so, it cycles through them and looks for a valid one. 
-                    if( validate( o ) )
-                    {
+                else { //If so, it cycles through them and looks for a valid one.
+                    if( validate( o ) ) {
                         unlocked.remove( o );
                         locked.put( o, new Long( now ) );
                         return( o );
                     }
-                    else
-                    {
+                    else {
                         // object failed validation
                         unlocked.remove( o );
                         expire( o );
@@ -54,8 +47,14 @@ public abstract class ObjectPool {
         locked.put( o, new Long( now ) );
         return( o );
     }
-    synchronized void checkIn( Object o ){
 
+    /**
+     * Move passedin object from locked hashtable to unlocked hashtable
+     * @param {@link Object}
+     */
+    synchronized void checkIn( Object o ){
+        locked.remove( o );
+        unlocked.put( o, new Long( System.currentTimeMillis() ) );
     }
 
     ObjectPool()
