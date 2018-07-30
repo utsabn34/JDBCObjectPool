@@ -59,4 +59,22 @@ public class JDBCConnectionPool extends ObjectPool{
             e.printStackTrace();
         }
     }
+
+    /**
+     * Allow to borrow JDBC Connection
+     * @return {@link Connection}
+     */
+    public Connection borrowConnection()
+    {
+        return( ( Connection ) super.checkOut() );
+    }
+
+    /**
+     * Let the user to return the borrowed connection
+     * @param {@link {@link Connection}}
+     */
+    public void returnConnection( Connection c )
+    {
+        super.checkIn( c );
+    }
 }
