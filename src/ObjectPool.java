@@ -4,7 +4,7 @@ import java.util.Hashtable;
 public abstract class ObjectPool {
     private long expirationTime;
     private Hashtable locked, unlocked;
-    abstract Object create();
+    abstract Object create() throws Exception;
     abstract boolean validate( Object o );
     abstract void expire( Object o );
 
@@ -13,7 +13,7 @@ public abstract class ObjectPool {
      * If so, it cycles through them and looks for a valid one.
      * @return {@link Object}
      */
-    synchronized Object checkOut(){
+    synchronized Object checkOut() throws Exception{
         long now = System.currentTimeMillis();
         Object o;
         if( unlocked.size() > 0 ) {

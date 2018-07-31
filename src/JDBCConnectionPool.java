@@ -6,14 +6,11 @@ public class JDBCConnectionPool extends ObjectPool{
 
     private String dsn, usr, pwd;
 
-    public JDBCConnectionPool( String driver, String dsn, String usr, String pwd )
-    {
-        try
-        {
+    public JDBCConnectionPool( String driver, String dsn, String usr, String pwd ) {
+        try {
             Class.forName( driver ).newInstance();
         }
-        catch( Exception e )
-        {
+        catch( Exception e ) {
             e.printStackTrace();
         }
         this.dsn = dsn;
@@ -23,26 +20,18 @@ public class JDBCConnectionPool extends ObjectPool{
 
 
     @Override
-    Object create() {
-        try
-        {
+    Object create() throws Exception {
+
             return( DriverManager.getConnection( dsn, usr, pwd ) );
-        }
-        catch( SQLException e )
-        {
-            e.printStackTrace();
-            return( null );
-        }
+
     }
 
     @Override
     boolean validate(Object o) {
-        try
-        {
+        try {
             return( ! ( ( Connection ) o ).isClosed() );
         }
-        catch( SQLException e )
-        {
+        catch( SQLException e ) {
             e.printStackTrace();
             return( false );
         }
@@ -50,12 +39,10 @@ public class JDBCConnectionPool extends ObjectPool{
 
     @Override
     void expire(Object o) {
-        try
-        {
+        try {
             ( (Connection) o ).close();
         }
-        catch( SQLException e )
-        {
+        catch( SQLException e ) {
             e.printStackTrace();
         }
     }
@@ -64,9 +51,15 @@ public class JDBCConnectionPool extends ObjectPool{
      * Allow to borrow JDBC Connection
      * @return {@link Connection}
      */
-    public Connection borrowConnection()
-    {
-        return( ( Connection ) super.checkOut() );
+    public Connection borrowConnection() throws SQLException {
+        try {
+
+            return ((Connection) super.checkOut());
+            
+        }catch (Exception e){
+
+            throw (SQLException)e;
+        }
     }
 
     /**
