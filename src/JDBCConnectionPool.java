@@ -55,7 +55,7 @@ public class JDBCConnectionPool extends ObjectPool{
         try {
 
             return ((Connection) super.checkOut());
-            
+
         }catch (Exception e){
 
             throw (SQLException)e;
@@ -66,8 +66,7 @@ public class JDBCConnectionPool extends ObjectPool{
      * Let the user to return the borrowed connection
      * @param {@link {@link Connection}}
      */
-    public void returnConnection( Connection c )
-    {
+    public void returnConnection( Connection c ) {
         super.checkIn( c );
     }
 }
